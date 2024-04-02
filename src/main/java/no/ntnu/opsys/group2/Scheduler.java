@@ -54,6 +54,64 @@ public class Scheduler {
     return results;
   }
 
+  public List<Double> prioritySchedulingAlgo(List<Process> processes) {
+    // Defines variable to store results
+    List<Double> results = new ArrayList<>();
+
+    // Defines ticks
+    int t = 0;
+    // Defines variables to store total results
+    double totalTurnAroundTime = 0.0;
+    double totalWaitingTime = 0.0;
+
+    // Sorts processes by arrival time
+    processes = this.sortByArrivalTime(processes);
+
+    while (processes.size() > 0) {
+      List<Process> arrived = new ArrayList<>();
+      Process current = null;
+      Process priority = null;
+      boolean first = true;
+      for (Process process : processes) {
+        if (process.getArrivalTime() <= t) {
+          current = process;
+        }
+      }
+      if (!arrived.contains(current)) {
+        arrived.add(current);
+        processes.remove(current);
+      }
+      if (!arrived.isEmpty()) {
+        for (Process process : arrived) {
+          if (first) {
+            priority = process;
+            first = false;
+          } else {
+            if (process.getPriority() < priority.getPriority()) {
+              priority = process;
+            }
+          }
+        }
+        priority.setTickTime(priority.getTickTime() - 1);
+        if (priority.getTickTime() == 0) {
+          int turnAroundTime = this.calculateTurnAroundTime(t, priority.getArrivalTime());
+          int waitingTime = this.calculateWaitingTime(turnAroundTime, priority.getBurstTime());
+
+          totalTurnAroundTime += turnAroundTime;
+          totalWaitingTime += waitingTime;
+
+          arrived.remove(priority);
+        }
+      }
+      t++;
+    }
+    // Adds the average of the total results to the result list
+    results.add(totalTurnAroundTime / processes.size());
+    results.add(totalWaitingTime / processes.size());
+
+    return results;
+  }
+
   private int calculateTurnAroundTime(int completionTime, int arrivalTime) {
     return completionTime - arrivalTime;
   }
