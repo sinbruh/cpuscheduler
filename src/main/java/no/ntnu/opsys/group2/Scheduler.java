@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Scheduler {
+  private double avgTurnAroundTime;
+  private double avgWaitingTime;
   /**
    * Returns a list containing the Average Waiting Time and Average Turn Around Time respectively
    * from a specified list of processes using First Come First Serve algorithm.
@@ -63,23 +65,19 @@ public class Scheduler {
     // Defines variables to store total results
     double totalTurnAroundTime = 0.0;
     double totalWaitingTime = 0.0;
+    boolean finished = false;
 
     // Sorts processes by arrival time
     processes = this.sortByArrivalTime(processes);
 
-    while (processes.size() > 0) {
+    while (!finished) {
       List<Process> arrived = new ArrayList<>();
-      Process current = null;
       Process priority = null;
       boolean first = true;
       for (Process process : processes) {
         if (process.getArrivalTime() <= t) {
-          current = process;
+          arrived.add(process);
         }
-      }
-      if (!arrived.contains(current)) {
-        arrived.add(current);
-        processes.remove(current);
       }
       if (!arrived.isEmpty()) {
         for (Process process : arrived) {
@@ -99,17 +97,28 @@ public class Scheduler {
 
           totalTurnAroundTime += turnAroundTime;
           totalWaitingTime += waitingTime;
-
-          arrived.remove(priority);
+        }
+        for (Process process : arrived) {
+          if (arrived.size() == processes.size() && process.getTickTime() == 0) {
+            finished = true;
+          }
         }
       }
       t++;
     }
     // Adds the average of the total results to the result list
-    results.add(totalTurnAroundTime / processes.size());
-    results.add(totalWaitingTime / processes.size());
+    this.avgTurnAroundTime = totalTurnAroundTime / processes.size();
+    this.avgWaitingTime= totalWaitingTime / processes.size();
 
     return results;
+  }
+
+  public double getAvgTurnAroundTime() {
+    return this.avgTurnAroundTime;
+  }
+
+  public double getAvgWaitingTime() {
+    return this.avgWaitingTime;
   }
 
   private int calculateTurnAroundTime(int completionTime, int arrivalTime) {
