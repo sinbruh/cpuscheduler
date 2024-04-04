@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Scheduler {
-  private double avgTurnAroundTime;
-  private double avgWaitingTime;
+  // private double avgTurnAroundTime;
+  // private double avgWaitingTime;
+
   /**
    * Returns a list containing the Average Waiting Time and Average Turn Around Time respectively
    * from a specified list of processes using First Come First Serve algorithm.
@@ -56,33 +57,83 @@ public class Scheduler {
     return results;
   }
 
+  // public List<Double> prioritySchedulingAlgo(List<Process> processes) {
+  //   // Defines variable to store results
+  //   List<Double> results = new ArrayList<>();
+  //
+  //   // Defines ticks
+  //   int t = 0;
+  //   // Defines variables to store total results
+  //   double totalTurnAroundTime = 0.0;
+  //   double totalWaitingTime = 0.0;
+  //   boolean finished = false;
+  //
+  //   // Sorts processes by arrival time
+  //   processes = this.sortByArrivalTime(processes);
+  //
+  //   while (!finished) {
+  //     List<Process> arrived = new ArrayList<>();
+  //     Process priority = null;
+  //     boolean first = true;
+  //     for (Process process : processes) {
+  //       if (process.getArrivalTime() <= t) {
+  //         arrived.add(process);
+  //       }
+  //     }
+  //     if (!arrived.isEmpty()) {
+  //       for (Process process : arrived) {
+  //         if (first) {
+  //           priority = process;
+  //           first = false;
+  //         } else {
+  //           if (process.getPriority() < priority.getPriority()) {
+  //             priority = process;
+  //           }
+  //         }
+  //       }
+  //       priority.setTickTime(priority.getTickTime() - 1);
+  //       if (priority.getTickTime() == 0) {
+  //         int turnAroundTime = this.calculateTurnAroundTime(t, priority.getArrivalTime());
+  //         int waitingTime = this.calculateWaitingTime(turnAroundTime, priority.getBurstTime());
+  //
+  //         totalTurnAroundTime += turnAroundTime;
+  //         totalWaitingTime += waitingTime;
+  //       }
+  //       for (Process process : arrived) {
+  //         if (arrived.size() == processes.size() && process.getTickTime() == 0) {
+  //           finished = true;
+  //         }
+  //       }
+  //     }
+  //     t++;
+  //   }
+  //   // Adds the average of the total results to the result list
+  //   this.avgTurnAroundTime = totalTurnAroundTime / processes.size();
+  //   this.avgWaitingTime= totalWaitingTime / processes.size();
+  //
+  //   return results;
+  // }
+
   public List<Double> prioritySchedulingAlgo(List<Process> processes) {
-    // Defines variable to store results
     List<Double> results = new ArrayList<>();
 
-    // Defines ticks
-    int t = 0;
-    // Defines variables to store total results
     double totalTurnAroundTime = 0.0;
     double totalWaitingTime = 0.0;
+
+    int t = 0;
+
     boolean finished = false;
 
-    // Sorts processes by arrival time
-    processes = this.sortByArrivalTime(processes);
-
-    while (!finished) {
-      List<Process> arrived = new ArrayList<>();
+    while(!finished) {
       Process priority = null;
       boolean first = true;
+
       for (Process process : processes) {
-        if (process.getArrivalTime() <= t) {
-          arrived.add(process);
-        }
-      }
-      if (!arrived.isEmpty()) {
-        for (Process process : arrived) {
+        // Finds the highest priority process that has remaining burst time
+        if (process.getBurstTime() > 0) {
           if (first) {
             priority = process;
+
             first = false;
           } else {
             if (process.getPriority() < priority.getPriority()) {
@@ -90,36 +141,38 @@ public class Scheduler {
             }
           }
         }
-        priority.setTickTime(priority.getTickTime() - 1);
-        if (priority.getTickTime() == 0) {
-          int turnAroundTime = this.calculateTurnAroundTime(t, priority.getArrivalTime());
-          int waitingTime = this.calculateWaitingTime(turnAroundTime, priority.getBurstTime());
+      }
+      // If no process is found it means each process has completed its burst time
+      if (priority == null) {
+        finished = true;
+      } else {
+        if (priority.getArrivalTime() <= t) {
+          priority.decrementBurstTime();
+          if (priority.getBurstTime() == 0) {
+            // TODO Remove waiting time where priority process has been interrupted
+            int turnAroundTime = this.calculateTurnAroundTime(t, priority.getArrivalTime());
+            int waitingTime = this.calculateWaitingTime(turnAroundTime,
+                                                        priority.getInitialBurstTime());
 
-          totalTurnAroundTime += turnAroundTime;
-          totalWaitingTime += waitingTime;
-        }
-        for (Process process : arrived) {
-          if (arrived.size() == processes.size() && process.getTickTime() == 0) {
-            finished = true;
+            totalTurnAroundTime += turnAroundTime;
+            totalWaitingTime += waitingTime;
           }
         }
       }
       t++;
     }
-    // Adds the average of the total results to the result list
-    this.avgTurnAroundTime = totalTurnAroundTime / processes.size();
-    this.avgWaitingTime= totalWaitingTime / processes.size();
-
+    results.add(totalTurnAroundTime / processes.size());
+    results.add(totalWaitingTime / processes.size());
     return results;
   }
 
-  public double getAvgTurnAroundTime() {
-    return this.avgTurnAroundTime;
-  }
+  // public double getAvgTurnAroundTime() {
+  //   return this.avgTurnAroundTime;
+  // }
 
-  public double getAvgWaitingTime() {
-    return this.avgWaitingTime;
-  }
+  // public double getAvgWaitingTime() {
+  //   return this.avgWaitingTime;
+  // }
 
   private int calculateTurnAroundTime(int completionTime, int arrivalTime) {
     return completionTime - arrivalTime;

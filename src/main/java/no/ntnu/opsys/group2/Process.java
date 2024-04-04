@@ -4,14 +4,16 @@ public class Process {
   private int id;
   private int arrivalTime;
   private int burstTime;
-  private int tickTime;
+  private final int initialBurstTime;
+  // private int tickTime;
   private int priority;
 
   public Process(int id, int arrivalTime, int burstTime) {
     this.id = id;
     this.arrivalTime = arrivalTime;
     this.burstTime = burstTime;
-    this.tickTime = burstTime;
+    this.initialBurstTime = burstTime;
+    // this.tickTime = burstTime;
     this.priority = 0;
   }
 
@@ -19,7 +21,8 @@ public class Process {
     this.id = id;
     this.arrivalTime = arrivalTime;
     this.burstTime = burstTime;
-    this.tickTime = burstTime;
+    this.initialBurstTime = burstTime;
+    // this.tickTime = burstTime;
     this.priority = priority;
   }
 
@@ -35,15 +38,23 @@ public class Process {
     return this.burstTime;
   }
 
-  public int getTickTime() {
-    return this.tickTime;
+  public int getInitialBurstTime() {
+    return this.initialBurstTime;
   }
+
+  // public int getTickTime() {
+  //   return this.tickTime;
+  // }
   
   public int getPriority() {
     return this.priority;
   }
 
-  public void setTickTime(int tickTime) {
-    this.tickTime = tickTime;
+  // public void setTickTime(int tickTime) {
+  //   this.tickTime = tickTime;
+  // }
+
+  public void decrementBurstTime() {
+    this.burstTime--;
   }
 }

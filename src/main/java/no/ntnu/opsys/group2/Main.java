@@ -17,8 +17,8 @@ public class Main {
     processes.add(p4);
     processes.add(p5);
     Scheduler sc = new Scheduler();
-    sc.prioritySchedulingAlgo(processes);
-    System.out.println(sc.getAvgTurnAroundTime());
-    System.out.println(sc.getAvgWaitingTime());
+    List<Double> results = sc.prioritySchedulingAlgo(processes);
+    System.out.println(results.get(0));
+    System.out.println(results.get(1));
   }
 }
