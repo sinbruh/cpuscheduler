@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Main {
   public static void main(String[] args) {
-    //prioritySchedulingAlgorithm();
-    fcfsAlgorithm();
+    //fcfsAlgorithm();
+    prioritySchedulingAlgorithm();
   }
 
   private static void prioritySchedulingAlgorithm() {
