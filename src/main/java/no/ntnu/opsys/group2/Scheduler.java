@@ -82,14 +82,22 @@ public class Scheduler {
     return results;
   }
 
+  /**
+   * Calculates the average wait and turnaround time for a list of processes using a
+   * preemptive priority scheduling algorithm. The results can be gathered by calling the getAvgWaitTime() and
+   * getAvgTurnaroundTime() methods of the same object.
+   * @param processes A list of processes
+   */
   public void prioritySchedulingAlgo(List<Process> processes) {
     int size = processes.size();
 
     // Defines ticks
     int tick = 0;
 
+    //Initiate lists that will hold the processes
     List<Process> arrived = new ArrayList<>();
     List<Process> done = new ArrayList<>();
+
     boolean finished = false;
 
     while (!finished) {
@@ -104,29 +112,40 @@ public class Scheduler {
         }
       }
 
+
       Process activeProcess;
       if (!arrived.isEmpty()) {
+        //Sorts the list of arrived processes so that the highest priority process is first
         arrived = arrived.stream().sorted(Comparator.comparing(Process::getPriority))
                   .collect(Collectors.toList());
         activeProcess = arrived.get(0);
 
+        //Ticks the highest process, which reduces the burst time by 1
         activeProcess.tick();
+
+        //Increases the wait time of all other arrived processes by 1
         for (int i = 1; i < arrived.size(); i++) {
           arrived.get(i).waitTick();
         }
+
+        //checks to see if the active process is done and moves it to the list of done processes if it is
         if (activeProcess.isDone()) {
           activeProcess.setCompletionTime(tick);
           done.add(activeProcess);
           arrived.remove(activeProcess);
         }
       }
+      //increases the tick time by 1
       tick++;
+
+      //checks if we are finished processing all the processes
       finished = arrived.isEmpty() && processes.isEmpty();
     }
 
     double totalTurnAroundTime = 0.0;
     double totalWaitingTime = 0.0;
 
+    //Calculates the total waiting time and turnaround time
     for (Process process : done) {
       int waitingTime = process.getWaitTime();
       System.out.println("Process " + process.getId() + " waiting time: " + waitingTime);
@@ -135,6 +154,7 @@ public class Scheduler {
         totalWaitingTime += waitingTime;
     }
 
+    //Finds the average
     this.avgTurnAroundTime = (totalTurnAroundTime / size);
     this.avgWaitingTime = (totalWaitingTime / size);
   }
