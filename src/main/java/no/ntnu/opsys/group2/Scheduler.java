@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The Scheduler class represents the class that contains the algorithms used in the assignment.
+ * The Scheduler class represents the class that contains the algorithms used in the project.
  * 
  * @author  Group 2
  * @version v1.0 (2024.04.05)
