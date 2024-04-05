@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Scheduler {
   private double avgTurnAroundTime;
-    private double avgWaitingTime;
+  private double avgWaitingTime;
 
   /**
    * Returns a list containing the Average Waiting Time and Average Turn Around Time respectively
@@ -110,10 +110,6 @@ public class Scheduler {
         totalTurnAroundTime += turnAroundTime;
         totalWaitingTime += waitingTime;
     }
-
-
-
-    System.out.println("Debug: " + totalTurnAroundTime + " " + totalWaitingTime + " " + size);
 
     this.avgTurnAroundTime = (totalTurnAroundTime / size);
     this.avgWaitingTime = (totalWaitingTime / size);
