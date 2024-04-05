@@ -6,9 +6,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The Scheduler class represents the class that contains the algorithms used in the assignment.
+ * 
+ * @author  Group 2
+ * @version v1.0 (2024.04.05)
+ */
 public class Scheduler {
   private double avgTurnAroundTime;
   private double avgWaitingTime;
+
+  /**
+   * Returns the average Waiting Time.
+   * 
+   * @return The average Waiting Time
+   */
+  public double getAvgWaitingTime() {
+    return avgWaitingTime;
+  }
+
+  /**
+   * Returns the average Turn Around Time.
+   * 
+   * @return The average Turn Around Time
+   */
+  public double getAvgTurnAroundTime() {
+    return avgTurnAroundTime;
+  }
 
   /**
    * Returns a list containing the Average Waiting Time and Average Turn Around Time respectively
@@ -115,24 +139,38 @@ public class Scheduler {
     this.avgWaitingTime = (totalWaitingTime / size);
   }
 
+  /**
+   * Returns the calculated Turn Around Time for a process by the specifed completion time and the
+   * specified arrival time.
+   * 
+   * @param completionTime The specified completion time
+   * @param arrivalTime The specified arriva time
+   * @return The calculated Turn Around Time for a process
+   */
   private int calculateTurnAroundTime(int completionTime, int arrivalTime) {
     return completionTime - arrivalTime;
   }
 
+  /**
+   * Returns the calculated Waiting Time for a proess by the specified Turn Around Time for the
+   * process and the specified burst time.
+   * 
+   * @param turnAroundTime The specified Turn Around Time for the process
+   * @param burstTime The specified burst time
+   * @return The calculated Waiting Time for a process
+   */
   private int calculateWaitingTime(int turnAroundTime, int burstTime) {
     return turnAroundTime - burstTime;
   }
 
+  /**
+   * Returns the set of processes sorted by arrival time from the specified set of processes.
+   * 
+   * @param processes The specifed set of processes
+   * @return The set of processes sorted by arrival time
+   */
   private List<Process> sortByArrivalTime(List<Process> processes) {
     return processes.stream().sorted(Comparator.comparing(Process::getArrivalTime))
            .collect(Collectors.toList());
-  }
-
-  public double getAvgWaitingTime() {
-    return avgWaitingTime;
-  }
-
-  public double getAvgTurnAroundTime() {
-    return avgTurnAroundTime;
   }
 }
