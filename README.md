@@ -9,3 +9,6 @@ Around Time from a set of processes using First Come First Serve and Preemptive 
 algorithms.
 
 ### How to run
+
+1. Choose the algorithm you want in the main method in the Main class.
+2. Run the Main class.
